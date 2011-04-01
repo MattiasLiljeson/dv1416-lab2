@@ -28,6 +28,7 @@ D3DHandler::D3DHandler(HINSTANCE _hInstance)
 D3DHandler::~D3DHandler()
 {
 	delete camera;
+	delete camera2;
 	delete world;
 	delete input;
 
@@ -67,7 +68,7 @@ void D3DHandler::init()
 	initEffect();
 	initStates();
 
-	camera = new Camera(wndWidth, wndHeight, 1.0f, 100.0f, device, effect);
+	camera = new Camera(wndWidth, wndHeight, 1.0f, 1000.0f, device, effect);
 	camera2 = new Camera(wndWidth, wndHeight, 1.0f, 10.0f, device, effect);
 	input = new InputHandler(&hInstance, &hWnd);
 
@@ -315,23 +316,25 @@ void D3DHandler::update(float _dt)
 	//handle input
 	input->update();
 	if(input->getWasd(W))
-		camera->walk(25.0f, _dt);
+		camera2->walk(25.0f, _dt);
 	if(input->getWasd(A))
-		camera->strafe(-25.0f, _dt);
+		camera2->strafe(-25.0f, _dt);
 	if(input->getWasd(S))
-		camera->walk(-25.0f, _dt);
+		camera2->walk(-25.0f, _dt);
 	if(input->getWasd(D))
-		camera->strafe(25.0f, _dt);
+		camera2->strafe(25.0f, _dt);
 
-	camera->rotateY((float)input->getMouse(X)/1000, 1);
-	camera->pitch((float)input->getMouse(Y)/1000, 1);
+	//camera->rotateY((float)input->getMouse(X)/1000, 1);
+	//camera->pitch((float)input->getMouse(Y)/1000, 1);
 	
 	float y;
-	y = world->getHeight(camera->getPos().x, camera->getPos().z);
+	y = world->getHeight(camera2->getPos().x, camera2->getPos().z);
 
 	//y = 100; //debug
 
-	camera->update(1, y);
+	camera->setLook(D3DXVECTOR4(1,0,0,0));
+	camera->setPos(D3DXVECTOR4(10,0,10,1));
+	camera->update(_dt);
 
 	world->update( _dt);
 	for(UINT i = 0; i<objects.size(); i++)
@@ -369,7 +372,7 @@ void D3DHandler::draw()
 	for(UINT i = 0; i<particleSystems.size(); i++)
 		//particleSystems[i]->draw();
 
-	//node->draw();
+	node->draw();
 
     // display the rendered frame
     swapchain->Present(0, 0);

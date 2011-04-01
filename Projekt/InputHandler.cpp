@@ -65,13 +65,13 @@ void InputHandler::update()
 	reset();
 	detectInput();
 	
-	if(keystate[DIK_UP] & 0x80)
+	if(keystate[DIK_W] & 0x80)
         wasd[W] = true;
-	if(keystate[DIK_LEFT] & 0x80)
+	if(keystate[DIK_A] & 0x80)
         wasd[A] = true;
-	if(keystate[DIK_DOWN] & 0x80)
+	if(keystate[DIK_S] & 0x80)
         wasd[S] = true;
-    if(keystate[DIK_RIGHT] & 0x80)
+    if(keystate[DIK_D] & 0x80)
         wasd[D] = true;
 
 	if(keystate[DIK_ESCAPE] & 0x80)

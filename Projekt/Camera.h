@@ -47,6 +47,7 @@ private:
 	float nearWidth;
 
 	D3DXVECTOR3 vec_frustumCornersPos[8];
+	D3DXPLANE plane_frustumSides[6];
 	Frustum* frustum; //3d-object representing the frustum in the world
 
 	virtual void initFXVars();
@@ -54,13 +55,16 @@ private:
 
 public:
 	Camera(float _wndWidth, float _wndHeight, int _nearDist, int _farDist, ID3D10Device* _device, ID3D10Effect* _effect);
-	void update(float _dt, float _height);
+	void update(float _dt);
 	void draw();
 	void setProjection();
 	void setView();
 	D3DXMATRIX getView();
 	D3DXMATRIX getCamera();
 	D3DXVECTOR3 getPos();
+	void setPos(D3DXVECTOR4 _vec_pos);
+	void setLook(D3DXVECTOR4 _vec_look);
+	void setHeight(float _height);
 	void strafe(float amount, float _dt);
 	void walk(float amount, float _dt);
 	void pitch(float angle, float _dt);

@@ -44,7 +44,7 @@ void Camera::initFXVars()
 	//fxVar_farInfo		= effect->GetVariableByName("vecFarInfo");
 }
 
-void Camera::update(float _dt, float _height)
+void Camera::update(float _dt)
 {
 	//Normalize axes
 	D3DXVec3Normalize(&vec_lookAt, &vec_lookAt);
@@ -55,11 +55,7 @@ void Camera::update(float _dt, float _height)
 	D3DXVec3Cross(&vec_right, &vec_up, &vec_lookAt);
 	D3DXVec3Normalize(&vec_right, &vec_right);
 
-	//getHeight
-	vec_position.y = _height + 1.5f;
-
 	//vecPosition.z -= 0.01*_dt;
-
 	setView();
 	setFXVars();
 
@@ -85,6 +81,53 @@ D3DXMATRIX Camera::getView()
 D3DXVECTOR3 Camera::getPos()
 {
 	return vec_position;
+}
+
+void Camera::setPos(D3DXVECTOR4 _vec_pos)
+{
+	if(_vec_pos.w > 0.1) // >0.1  instead of ==1 for float precision problem
+	{
+		//point, replace
+		vec_position.x = _vec_pos.x;
+		vec_position.y = _vec_pos.y;
+		vec_position.z = _vec_pos.z;
+	}
+	else
+	{
+		//vector, add
+		vec_position.x += _vec_pos.x;
+		vec_position.y += _vec_pos.y;
+		vec_position.z += _vec_pos.z;
+	}
+}
+
+void Camera::setLook(D3DXVECTOR4 _vec_look)
+{
+	D3DXVECTOR3 _vec_temp;
+
+	if(_vec_look.w > 0-1) // >0  instead of ==1 for float precision problem
+	{
+		//point calculate normal from to - from
+		_vec_temp.x = _vec_look.x - vec_position.x;
+		_vec_temp.y = _vec_look.y - vec_position.y;
+		_vec_temp.z = _vec_look.z - vec_position.z;
+
+		D3DXVec3Normalize(&vec_lookAt, &_vec_temp);
+	}
+	else
+	{
+		//vector, replace
+		_vec_temp.x = _vec_look.x + vec_lookAt.x;
+		_vec_temp.y = _vec_look.y + vec_lookAt.y;
+		_vec_temp.z = _vec_look.z + vec_lookAt.z;
+
+		D3DXVec3Normalize(&vec_lookAt, &_vec_temp);
+	}
+}
+
+void Camera::setHeight(float _height)
+{
+	vec_position.y = _height;
 }
 
 void Camera::setProjection()
