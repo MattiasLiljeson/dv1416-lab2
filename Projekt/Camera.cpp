@@ -105,24 +105,25 @@ void Camera::setLook(D3DXVECTOR4 _vec_look)
 {
 	D3DXVECTOR3 _vec_temp;
 
-	if(_vec_look.w > 0-1) // >0  instead of ==1 for float precision problem
+	if(_vec_look.w > 0.1) // >0  instead of ==1 for float precision problem
 	{
-		//point calculate normal from to - from
-		_vec_temp.x = _vec_look.x - vec_position.x;
-		_vec_temp.y = _vec_look.y - vec_position.y;
-		_vec_temp.z = _vec_look.z - vec_position.z;
-
-		D3DXVec3Normalize(&vec_lookAt, &_vec_temp);
+		//point, replace
+		vec_lookAt.x = vec_position.x;
+		vec_lookAt.y = vec_position.y;
+		vec_lookAt.z = vec_position.z;
 	}
 	else
 	{
-		//vector, replace
-		_vec_temp.x = _vec_look.x + vec_lookAt.x;
-		_vec_temp.y = _vec_look.y + vec_lookAt.y;
-		_vec_temp.z = _vec_look.z + vec_lookAt.z;
-
-		D3DXVec3Normalize(&vec_lookAt, &_vec_temp);
+		//vector, calculate new point to look at
+		vec_lookAt.x = _vec_look.x + vec_position.x;
+		vec_lookAt.y = _vec_look.y + vec_position.y;
+		vec_lookAt.z = _vec_look.z + vec_position.z;
 	}
+
+	//normalize and replace
+	//D3DXVec3Normalize(&vec_lookAt, &_vec_temp);
+
+	setView();
 }
 
 void Camera::setHeight(float _height)
@@ -177,29 +178,31 @@ void Camera::setProjection()
 
 void Camera::setView()
 {
-	float x = -D3DXVec3Dot(&vec_position, &vec_right);
-	float y = -D3DXVec3Dot(&vec_position, &vec_up);
-	float z = -D3DXVec3Dot(&vec_position, &vec_lookAt);
+	//float x = -D3DXVec3Dot(&vec_position, &vec_right);
+	//float y = -D3DXVec3Dot(&vec_position, &vec_up);
+	//float z = -D3DXVec3Dot(&vec_position, &vec_lookAt);
 
-	mat_view(0,0) = vec_right.x; 
-	mat_view(1,0) = vec_right.y; 
-	mat_view(2,0) = vec_right.z; 
-	mat_view(3,0) = x;   
+	//mat_view(0,0) = vec_right.x; 
+	//mat_view(1,0) = vec_right.y; 
+	//mat_view(2,0) = vec_right.z; 
+	//mat_view(3,0) = x;   
 
-	mat_view(0,1) = vec_up.x;
-	mat_view(1,1) = vec_up.y;
-	mat_view(2,1) = vec_up.z;
-	mat_view(3,1) = y;  
+	//mat_view(0,1) = vec_up.x;
+	//mat_view(1,1) = vec_up.y;
+	//mat_view(2,1) = vec_up.z;
+	//mat_view(3,1) = y;  
 
-	mat_view(0,2) = vec_lookAt.x; 
-	mat_view(1,2) = vec_lookAt.y; 
-	mat_view(2,2) = vec_lookAt.z; 
-	mat_view(3,2) = z;   
+	//mat_view(0,2) = vec_lookAt.x; 
+	//mat_view(1,2) = vec_lookAt.y; 
+	//mat_view(2,2) = vec_lookAt.z; 
+	//mat_view(3,2) = z;   
 
-	mat_view(0,3) = 0.0f;
-	mat_view(1,3) = 0.0f;
-	mat_view(2,3) = 0.0f;
-	mat_view(3,3) = 1.0f;
+	//mat_view(0,3) = 0.0f;
+	//mat_view(1,3) = 0.0f;
+	//mat_view(2,3) = 0.0f;
+	//mat_view(3,3) = 1.0f;
+
+	D3DXMatrixLookAtLH(&mat_view, &vec_position, &vec_lookAt, &D3DXVECTOR3(0,1,0));
 }
 
 void Camera::setFXVars()

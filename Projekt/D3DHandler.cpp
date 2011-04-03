@@ -28,7 +28,7 @@ D3DHandler::D3DHandler(HINSTANCE _hInstance)
 D3DHandler::~D3DHandler()
 {
 	delete camera;
-	delete camera2;
+	//delete camera2;
 	delete world;
 	delete input;
 
@@ -69,7 +69,7 @@ void D3DHandler::init()
 	initStates();
 
 	camera = new Camera(wndWidth, wndHeight, 1.0f, 1000.0f, device, effect);
-	camera2 = new Camera(wndWidth, wndHeight, 1.0f, 10.0f, device, effect);
+	//camera2 = new Camera(wndWidth, wndHeight, 1.0f, 10.0f, device, effect);
 	input = new InputHandler(&hInstance, &hWnd);
 
 	initLights();
@@ -316,24 +316,24 @@ void D3DHandler::update(float _dt)
 	//handle input
 	input->update();
 	if(input->getWasd(W))
-		camera2->walk(25.0f, _dt);
+		//camera2->walk(25.0f, _dt);
 	if(input->getWasd(A))
-		camera2->strafe(-25.0f, _dt);
+		//camera2->strafe(-25.0f, _dt);
 	if(input->getWasd(S))
-		camera2->walk(-25.0f, _dt);
+		//camera2->walk(-25.0f, _dt);
 	if(input->getWasd(D))
-		camera2->strafe(25.0f, _dt);
+		//camera2->strafe(25.0f, _dt);
 
 	//camera->rotateY((float)input->getMouse(X)/1000, 1);
 	//camera->pitch((float)input->getMouse(Y)/1000, 1);
 	
-	float y;
-	y = world->getHeight(camera2->getPos().x, camera2->getPos().z);
+	float y = 10.0f;
+	//y = world->getHeight(camera2->getPos().x, camera2->getPos().z);
 
 	//y = 100; //debug
 
-	camera->setLook(D3DXVECTOR4(1,0,0,0));
-	camera->setPos(D3DXVECTOR4(10,0,10,1));
+	camera->setLook(D3DXVECTOR4(1,0,1,0));
+	camera->setPos(D3DXVECTOR4(10,20,10,1));
 	camera->update(_dt);
 
 	world->update( _dt);
@@ -359,7 +359,7 @@ void D3DHandler::draw()
 	device->OMSetBlendState(0, blendFactors, 0xffffffff);
 
     // do 3D rendering on the back buffer here
-	camera2->draw();
+	//camera2->draw();
 	//camera->draw();
 
 	world->draw();
